@@ -24,7 +24,7 @@ orcl_conn = cx_Oracle.connect("sap***", "test***", "dggm8fu***:1521/***srv")
 orcl_cur = orcl_conn.cursor()
 
 def usage_metric_insert(p_type, p_type_detl, p_value, p_batch):
-	metric = {"sid":db_sid, "host":host, "type":p_type, "type_detail":p_type_detl, "value":p_value, "batch":p_batch}
+	metrics = {"sid":db_sid, "host":host, "type":p_type, "type_detail":p_type_detl, "value":p_value, "batch":p_batch}
 	insert_stmt = "insert into sys_workload values (metric_seq.nextval, :sid, :host, :type, :type_detl, :value, sysdate, :batch)"
 	tmp = orcl_cur.execute(insert_stmt, metrics)
 	orcl_conn.commit()
