@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"path/filepath"
 )
@@ -32,10 +33,10 @@ func getFiles(path string) []string {
 	var files []string
 	cmd := exec.Command("ls", path)
 	out, _ := cmd.CombinedOutput()
-	tmp := strings.Split(string(out), "\n")
+	tmp := strings.Split(strings.TrimRight(string(out), "\n"), "\n")
 
 	for _, file := range tmp {
-		files = append(files, path + "/" + file)
+		files = append(files, filepath.Clean(path + "/" + file))
 	}
 
 	return files
@@ -62,7 +63,7 @@ func locator(dir string, m map[string]int64) string {
 	return flg
 }
 
-var dir = "../"
+var dir = "./../workspace"
 var total = getSize(dir)
 var topPct = int64(10)
 
@@ -72,6 +73,6 @@ func main() {
 	locator(dir, top)
 
 	for k, v := range top {
-		fmt.Printf("%s: %10s\n", k, v)
+		fmt.Printf("%-10s%s\n", strconv.Itoa(int(v)) + "%:", k)
 	}
 }
