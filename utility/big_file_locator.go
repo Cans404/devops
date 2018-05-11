@@ -3,12 +3,13 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
-	"path/filepath"
 )
 
 // 返回文件或目录（递归统计）大小，单位 byte
@@ -22,21 +23,21 @@ func getSize(file string) int64 {
 		filepath.Walk(file, func(path string, info os.FileInfo, err error) error {
 			size_b += info.Size()
 			return nil
-			})
+		})
 	}
 
 	return size_b
 }
 
 // 带父目录返回目录下的文件列表
-func getFiles(path string) []string {
+func getFiles(dir string) []string {
 	var files []string
-	cmd := exec.Command("ls", path)
+	cmd := exec.Command("ls", dir)
 	out, _ := cmd.CombinedOutput()
 	tmp := strings.Split(strings.TrimRight(string(out), "\n"), "\n")
 
 	for _, file := range tmp {
-		files = append(files, filepath.Clean(path + "/" + file))
+		files = append(files, filepath.Clean(dir+"/"+file))
 	}
 
 	return files
@@ -48,7 +49,7 @@ func locator(dir string, m map[string]int64) string {
 		f, _ := os.Stat(file)
 		pct := getSize(file) * 100 / total
 
-		if pct > topPct {
+		if pct > *topPct {
 			flg = "Y"
 			if f.IsDir() == false {
 				m[file] = pct
@@ -63,16 +64,26 @@ func locator(dir string, m map[string]int64) string {
 	return flg
 }
 
-var dir = "./../workspace"
-var total = getSize(dir)
-var topPct = int64(10)
+var (
+	dir *string
+	topPct *int64
+	total int64
+)
+
+func init() {
+	dir = flag.String("path", "./", "path you want to analyze, current path as default")
+	topPct = flag.Int64("percent", 10, "granularity to focus, 10% as default")
+	flag.Parse()
+
+	total = getSize(*dir)
+}
 
 func main() {
 	top := make(map[string]int64)
 
-	locator(dir, top)
+	locator(*dir, top)
 
 	for k, v := range top {
-		fmt.Printf("%-10s%s\n", strconv.Itoa(int(v)) + "%:", k)
+		fmt.Printf("%-10s%s\n", strconv.Itoa(int(v))+"%:", k)
 	}
 }
