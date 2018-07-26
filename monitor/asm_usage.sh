@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# created by f00378403, 20180725
+# created by cans, 20180725
 
 source ~/.bash_profile
 
@@ -27,5 +27,5 @@ done
 
 if [ -n $message ]; then
 	message="### asm usage on $HOSTNAME ###\n"${message}
-	/home/grid/script/bidwsns-bin -tel "18613146197" -msg "`echo -e ${message}`"
+	/home/grid/script/bidwsns-bin -tel "186****6197" -msg "`echo -e ${message}`"
 fi
