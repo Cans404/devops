@@ -64,7 +64,6 @@ if [[ `date +%M` == 30 ]]; then
 	disk_usage
 fi
 
-disk_usage
 mem_usage; cpu_usage
 
 content_count=`cat $message | wc -l` && (($content_count >= 1)) && alert_flag="True"
