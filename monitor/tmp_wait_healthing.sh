@@ -32,14 +32,18 @@ having count(t1.event) > 50;
 exit
 EOF`
 
-if [ "$var_eval" ] && (( ${#tmp_wait[*]} > 0 )); then
-	message="### orcl alert on ${ORACLE_SID:0:5} ###\n"
+if [ "$var_eval" ]; then
+	declare $var_eval
 
-	for key in ${!tmp_wait[*]}
-	do
-		message=${message}"wait event for $key up to ${tmp_wait[$key]}\n"
-		add_tmpfile $key
-	done
+	if (( ${#tmp_wait[*]} > 0 )); then
+		message="### orcl alert on ${ORACLE_SID:0:5} ###\n"
 
-	/home/oracle/script/bidwsns-bin -tel "186****6197" -msg "`echo -e ${message}`"
+		for key in ${!tmp_wait[*]}
+		do
+			message=${message}"wait event for $key up to ${tmp_wait[$key]}\n"
+			add_tmpfile $key
+		done
+
+		/home/oracle/script/bidwsns-bin -tel "186****6197" -msg "`echo -e ${message}`"
+	fi
 fi
