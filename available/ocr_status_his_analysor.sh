@@ -12,7 +12,7 @@ else
 	exit 1
 fi
 
-ip=`hostname -I sed 's/[[:blank:]]*//g'`
+ip=`hostname -I | sed 's/[[:blank:]]*//g'`
 logFile="log/available_${svc}.log"
 
 # current unavailability checker
