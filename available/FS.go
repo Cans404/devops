@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	FSDir := http.FileServer(http.Dir("/root/zhenweifang"))
+	FSDir := http.FileServer(http.Dir("/root/Cans"))
 	http.Handle("/fileserver/", http.StripPrefix("/fileserver/", FSDir))
 
 	http.ListenAndServe(":12580", nil)
